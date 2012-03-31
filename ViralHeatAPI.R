@@ -1,3 +1,13 @@
+
+#' Get the sentiment of a piece of text
+#' 
+#' Uses ViralHeat's API to calculate the sentiment of a given piece of text.
+#' Note that their API only accepts up to 360 characters of text, so any text longer than that will be clipped.
+#' 
+#' @param text the text to be analyzed
+#' @param key the key to be used for the API
+#' @return the sentiment of the text provided
+#' @author Jeff Allen \email{jeff.allen@@trestletechnology.net}
 getSentiment <- function (text, key){
   library(RCurl);
   library(RJSONIO);

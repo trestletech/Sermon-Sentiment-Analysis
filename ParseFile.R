@@ -1,4 +1,7 @@
-
+#' Reads in a file and chops it into sentences which can be analyzed by sentiment analysis individually
+#' @param filename the file to read
+#' @return the sentences making up the file given
+#' @author Jeff Allen \email{jeff.allen@@trestletechnology.net}
 readFile <- function(filename){
   library(stringr);
   con <- file(filename);
@@ -28,7 +31,14 @@ readFile <- function(filename){
 }
 
 
-
+#' Add a sermon to sentiments.Rda
+#' 
+#' Reads in the given sermon, processes it, and adds the results to the list stored in Sentiments.Rda
+#' 
+#' @param title the name of the file in which the sermon is stored, also will be stored as the "title" of the sermon
+#' @param date the date on which the sermon was given -- meta information which will be stored alongside this sermon
+#' @return 
+#' @author Jeff Allen \email{jeff.allen@@trestletechnology.net}
 addSermon <- function(title, date){    
   library(stringr)
   load(file="sentiments.Rda");
@@ -88,39 +98,16 @@ addSermon <- function(title, date){
 }
 
 
-         
-myCloud <- function (w, col, yspace = 1.3, xspace = 0.1, minh = 0, add=FALSE, xmin = 0, xmax = 0.98, ystart=0.95, ...) 
-{
-    if (missing(col)) 
-        col <- "#000000"
-    omar <- par("mar")
-    par(mar = c(0, 0, 0, 0))
-    if (!add){
-      plot(xmin:xmax, 0:ystart, type = "n", axes = FALSE)
-    }
-    x = xmin
-    y = ystart
-    xch = minh
-    cm = 3/max(w)
-    . <- lapply(1:length(w), function(i) {
-        cex = w[i] * cm
-        ctw = strwidth(names(w[i]), cex = cex)
-        cth = strheight(names(w[i]), cex = cex)
-        if (cth > xch) 
-            xch <<- cth
-        if (x + ctw > xmax) {
-            x <<- xmin
-            y <<- y - (yspace * xch)
-            xch <<- minh
-        }
-        text(x, y, names(w[i]), cex = cex, adj = c(0, 0.5), col = col[i])
-        x <<- x + ctw + xspace
-    })
-    par(mar=omar)
-    invisible(TRUE)
-}
+   
  
-
+#' Create a table from the individual words given
+#' 
+#' Make a table out of the words given, computing the number of instance each is used.
+#' 
+#' @param words the words from which to construct the table
+#' @param maxWords the maximum number for each word
+#' @return a table representing the words given
+#' @author Jeff Allen \email{jeff.allen@@trestletechnology.net}
 getWordTable <- function (words, maxWords = 0){
   words <- words[-grep("[\\)\\(,;:\\.\\'\\\"]", words)]
   words <- words[-grep("^\\d+$", words)]

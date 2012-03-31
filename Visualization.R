@@ -1,6 +1,10 @@
 
-
-
+#' Plot a line showing the trend of the sentiments of a sermon
+#'
+#' Plots the points of the sentiments of the sentences given and then fits a smoothing spline on top to show the trend
+#'
+#' @param sermon the sermon to analyze -- should have field: author, title, and serm
+#' @author Jeff Allen \email{jeff.allen@@trestletechnology.net}
 plotSentenceTrend <- function(sermon){
   sent <- sermon$sent;
   sermAuthor <- sermon$author;
@@ -15,6 +19,42 @@ plotSentenceTrend <- function(sermon){
  
 }
 
+#' Plots a word cloud given the word table
+#' 
+#' @author Jeff Allen \email{jeff.allen@@trestletechnology.net}
+myCloud <- function (w, col, yspace = 1.3, xspace = 0.1, minh = 0, add=FALSE, xmin = 0, xmax = 0.98, ystart=0.95, ...) 
+{
+    if (missing(col)) 
+        col <- "#000000"
+    omar <- par("mar")
+    par(mar = c(0, 0, 0, 0))
+    if (!add){
+      plot(xmin:xmax, 0:ystart, type = "n", axes = FALSE)
+    }
+    x = xmin
+    y = ystart
+    xch = minh
+    cm = 3/max(w)
+    . <- lapply(1:length(w), function(i) {
+        cex = w[i] * cm
+        ctw = strwidth(names(w[i]), cex = cex)
+        cth = strheight(names(w[i]), cex = cex)
+        if (cth > xch) 
+            xch <<- cth
+        if (x + ctw > xmax) {
+            x <<- xmin
+            y <<- y - (yspace * xch)
+            xch <<- minh
+        }
+        text(x, y, names(w[i]), cex = cex, adj = c(0, 0.5), col = col[i])
+        x <<- x + ctw + xspace
+    })
+    par(mar=omar)
+    invisible(TRUE)
+}
+
+#' Plot the sentiment trend with the words that are most positively sentimented in the top and lowly sentimented on the bottom
+#' @author Jeff Allen \email{jeff.allen@@trestletechnology.net}
 plotHighLow <- function(sermon, sentenceLevel = TRUE){
     
     sent <- sermon$sent;
@@ -77,6 +117,8 @@ library(tm)
     
 }
 
+#' Identify the unique words in two dictionaries
+#' @author Jeff Allen \email{jeff.allen@@trestletechnology.net}
 getUniqueWords <- function (dictA, dictB, cutoff){  
   inCommon <- dictA[which(names(dictA)[1:cutoff] %in% names(dictB)[1:cutoff])]
   aUnique <- dictA[which(!names(dictA)[1:cutoff] %in% names(dictB)[1:cutoff])]
@@ -85,7 +127,8 @@ getUniqueWords <- function (dictA, dictB, cutoff){
 }
 
   
-
+#' Given sentiments of multiple sermons, show their average trends
+#' @author Jeff Allen \email{jeff.allen@@trestletechnology.net}
 plotAuthorsAvg <- function(authorsSent, title=""){
   mattSent <- authorsSent;    
 
